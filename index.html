@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
@@ -7,9 +8,9 @@
         /* ページ全体の設定 */
         body {
             margin: 0;
-            width: 810px;
+            width: 762px;
             height: 945px;
-            background: linear-gradient(to bottom, #d26b2e, #e79353);
+            background: #7accbf;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -19,8 +20,8 @@
         
         /* タイトル */
         .title {
-            margin-top: 90px;
-            font-size: 36px;
+            margin-top: 50px;
+            font-size: 28px;
             color: #fcf2e5;
             text-align: center;
             font-weight: bold;
@@ -32,28 +33,55 @@
         .image-container {
             display: flex;
             justify-content: center;
-            gap: 30px;
+            gap: 25px;
             width: 100%;
             margin-top: 60px
         }
         
-        /* 新しい画像用コンテナ：最初は完全に非表示 */
+        /* 新しい画像用コンテナ:最初は完全に非表示 */
         .new-image-container {
             display: none;
             width: 100%;
             justify-content: center;
             align-items: center;
-            margin-top: 20px;
+            margin-top: 20px
+        }
+        
+        /* 施設コンテンツへボタン */
+        .facility-button {
+            position: absolute;
+            bottom: 320px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 450px;
+            height: 80px;
+            background-color: #e8e8e8;
+            border-radius: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+            font-size: 28px;
+            font-weight: bold;
+            color: #333;
+            transition: transform 0.2s;
+            border: none;
+        }
+        
+        .facility-button:hover {
+            transform: translateX(-50%) scale(1.02);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.4);
         }
         
         /* メニューボタン */
         .menu-button {
             position: absolute;
-            bottom: 240px;
+            bottom: 210px;
             left: 50%;
             transform: translateX(-50%);
-            width: 140px;
-            height: 50px;
+            width: 450px;
+            height: 80px;
             background-color: white;
             border-radius: 20px;
             display: flex;
@@ -61,7 +89,7 @@
             align-items: center;
             cursor: pointer;
             box-shadow: 0 3px 6px rgba(0,0,0,0.3);
-            font-size: 18px;
+            font-size: 28px;
             font-weight: bold;
             color: #333;
             transition: transform 0.2s;
@@ -69,18 +97,19 @@
         }
         
         .menu-button:hover {
-            transform: translateX(-50%) scale(1.05);
-            box-shadow: 0 5px 10px rgba(0,0,0,0.4);
+            transform: translateX(-50%) scale(1.02);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.4);
         }
         
         /* 画像のスタイル */
         .image-container img {
-            width: 300px;
-            height: 225px;
+            width: 280px;
+            height: 210px;
             cursor: pointer;
-            border-radius: 12px;
-            box-shadow: 0 5px 10px rgba(0,0,0,0.3);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
             transition: transform 0.3s ease;
+            object-fit: cover;
         }
         
         .image-container img:hover {
@@ -89,10 +118,11 @@
         }
         
         .new-image-container img {
-            width: 450px;
-            height: 340px;
-            border-radius: 12px;
-            box-shadow: 0 5px 10px rgba(0,0,0,0.3);
+            width: 420px;
+            height: 315px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            object-fit: cover;
         }
         
         /* プレースホルダー画像のスタイル */
@@ -102,7 +132,7 @@
             align-items: center;
             justify-content: center;
             color: #666;
-            font-size: 18px;
+            font-size: 16px;
             font-weight: bold;
             text-align: center;
         }
@@ -113,7 +143,7 @@
             align-items: center;
             justify-content: center;
             color: #666;
-            font-size: 24px;
+            font-size: 20px;
             font-weight: bold;
             text-align: center;
         }
@@ -123,42 +153,94 @@
     <!-- タイトル -->
     <div class="title">
         あなたなら<br>
-        どっちの観光地に行きたい？
+        どっちの観光地に行きたい?
     </div>
     
     <!-- 元のペア画像 -->
     <div class="image-container">
-        <img id="image1" src="" alt="観光地1" onclick="changeImage('left')" class="placeholder" onerror="this.classList.add('placeholder'); this.innerHTML='観光地画像1';">
-        <img id="image2" src="" alt="観光地2" onclick="changeImage('right')" class="placeholder" onerror="this.classList.add('placeholder'); this.innerHTML='観光地画像2';">
+        <img id="image1" src="" alt="観光地1" onclick="changeImage('left')" class="placeholder">
+        <img id="image2" src="" alt="観光地2" onclick="changeImage('right')" class="placeholder">
     </div>
     
     <!-- クリック後に表示する新しい画像 -->
     <div class="new-image-container">
-        <img id="newImage" src="" alt="選択された観光地" class="new-placeholder" onerror="this.classList.add('new-placeholder'); this.innerHTML='選択された<br>観光地画像';">
+        <img id="newImage" src="" alt="選択された観光地" class="new-placeholder">
     </div>
+    
+    <!-- 施設コンテンツへボタン -->
+    <button class="facility-button" onclick="goToFacility()">
+        再投票
+    </button>
     
     <!-- メニューボタン -->
     <button class="menu-button" onclick="goToMenu()">
-        メニュー
+        施設メニュー
     </button>
     
     <script>
-        // 画像のペアを配列に格納（元の2つの画像のみ）
+        // Google Apps Script Web App URL (デプロイ後のURLに置き換えてください)
+        const API_URL = 'https://script.google.com/macros/s/AKfycbxNl12ClxKEJSLTwBqcT_4jeWrCerMNl9Xtg7-1GyCHj3jVHGbodB0gJAHF9MjqjAzE/exec';
+
+        // 画像のペアを配列に格納(元の2つの画像のみ)
         const imagePairs = [
-            ['images/term_photo1.jpg', 'images/term_photo2.jpg'],
-            ['images/term_photo3.jpg', 'images/term_photo4.jpg'],
-            ['images/term_photo5.jpg', 'images/term_photo6.jpg']
+            ['images/GP1_photo1.jpg', 'images/GP1_photo2.jpg'],
+            ['images/GP1_photo3.jpg', 'images/GP1_photo4.jpg'],
+            ['images/GP1_photo5.jpg', 'images/GP1_photo6.jpg']
         ];
         
-        // 各ペアに対応する新しい画像（結果表示用）
+        // 各ペアに対応する新しい画像(結果表示用)
         const newImages = {
             0: 'images/new12.jpg',
             1: 'images/new34.jpg',
-            2: 'images/new56.jpg'
+            2: 'images/new65.jpg'
         };
         
         let currentPairIndex = 0;
-        let clickedSide = ''; // クリックされた画像の側（'left' or 'right'）
+        let clickedSide = ''; // クリックされた画像の側('left' or 'right')
+        let autoResetTimer = null; // 自動リセット用タイマー
+        
+        // 統計データの初期化
+        let imageStats = {
+            pair0: { left: 0, right: 0, leftImage: 'GP1_photo1.jpg', rightImage: 'GP1_photo2.jpg' },
+            pair1: { left: 0, right: 0, leftImage: 'GP1_photo3.jpg', rightImage: 'GP1_photo4.jpg' },
+            pair2: { left: 0, right: 0, leftImage: 'GP1_photo5.jpg', rightImage: 'GP1_photo6.jpg' }
+        };
+        
+        // 統計をサーバーから読み込む(バックグラウンドで実行)
+        async function loadStats() {
+            try {
+                const response = await fetch(API_URL);
+                if (response.ok) {
+                    imageStats = await response.json();
+                    console.log('✅ サーバーから統計を読み込みました');
+                } else {
+                    console.log('⚠️ サーバーから統計を取得できませんでした。初期値を使用します。');
+                }
+            } catch (e) {
+                console.log('⚠️ サーバー接続エラー。ローカルモードで動作します:', e);
+            }
+        }
+        
+        // 統計を保存(サーバーに送信) - 画像ファイル名を送信
+        async function saveVote(pairIndex, side) {
+            // 画像ファイル名を取得
+            const pairKey = `pair${pairIndex}`;
+            const imageName = side === 'left' 
+                ? imageStats[pairKey].leftImage 
+                : imageStats[pairKey].rightImage;
+            
+            try {
+                const url = `${API_URL}?pairIndex=${encodeURIComponent(pairIndex)}&imageName=${encodeURIComponent(imageName)}`;
+                await fetch(url, {
+                    method: 'POST',
+                    mode: 'no-cors'
+                });
+                
+                console.log('💾 投票をサーバーに送信しました:', imageName);
+            } catch (e) {
+                console.error('❌ サーバー接続エラー:', e);
+            }
+        }
         
         // ランダムなインデックスを生成
         function getRandomIndex(max) {
@@ -170,13 +252,21 @@
             currentPairIndex = getRandomIndex(imagePairs.length);
             const [src1, src2] = imagePairs[currentPairIndex];
             
+            // タイトルの更新
+            const titleElement = document.querySelector('.title');
+            if (currentPairIndex === 0) {
+                titleElement.innerHTML = 'あなたなら<br>どっちのビールが飲みたい?';
+            } else {
+                titleElement.innerHTML = 'あなたなら<br>どっちの観光地に行きたい?';
+            }
+            
             const img1 = document.getElementById('image1');
             const img2 = document.getElementById('image2');
             
             // 画像読み込み処理
             img1.onload = function() {
                 this.classList.remove('placeholder');
-                this.innerHTML = '';
+                this.style.background = 'none';
             };
             img1.onerror = function() {
                 this.classList.add('placeholder');
@@ -186,7 +276,7 @@
             
             img2.onload = function() {
                 this.classList.remove('placeholder');
-                this.innerHTML = '';
+                this.style.background = 'none';
             };
             img2.onerror = function() {
                 this.classList.add('placeholder');
@@ -194,15 +284,33 @@
                 this.removeAttribute('src');
             };
             
+            // プレースホルダーテキストを設定
+            img1.innerHTML = '観光地画像1';
+            img2.innerHTML = '観光地画像2';
+            
             img1.src = src1;
             img2.src = src2;
         }
         
-        // クリック時：どちらをクリックしたか記録 → 新画像を表示
-        function changeImage(side) {
+        // クリック時:どちらをクリックしたか記録 → 新画像を表示
+        async function changeImage(side) {
             clickedSide = side;
+            
+            // ローカルの統計を更新
+            const pairKey = `pair${currentPairIndex}`;
+            if (side === 'left') {
+                imageStats[pairKey].left++;
+            } else {
+                imageStats[pairKey].right++;
+            }
+            
+            // サーバーに投票を送信
+            await saveVote(currentPairIndex, side);
+            
+            console.log('✅ 投票を記録しました');
             console.log('クリックされた画像:', clickedSide);
             console.log('選択されたペア:', currentPairIndex);
+            console.log('現在の統計:', imageStats[pairKey]);
             
             // 元の画像ペアを非表示にし、新しい画像を表示
             document.querySelector('.image-container').style.display = 'none';
@@ -212,6 +320,7 @@
             const newImg = document.getElementById('newImage');
             newImg.onload = function() {
                 this.classList.remove('new-placeholder');
+                this.style.background = 'none';
                 this.innerHTML = '';
             };
             newImg.onerror = function() {
@@ -220,20 +329,61 @@
                 this.removeAttribute('src');
             };
             
+            // プレースホルダーテキストを設定
+            newImg.innerHTML = '選択された<br>観光地画像';
             newImg.src = newImages[currentPairIndex];
+            
+            // 30秒後に自動的に投票TOP画面に戻る
+            startAutoResetTimer();
         }
         
-     function goToMenu() {
-            document.querySelector('.image-container').style.display = 'flex';
-            document.querySelector('.new-image-container').style.display = 'none';
-            displayRandomImages();
+        // 自動リセットタイマーを開始
+        function startAutoResetTimer() {
+            // 既存のタイマーがあればクリア
+            if (autoResetTimer) {
+                clearTimeout(autoResetTimer);
+            }
+            
+            // 30秒後に投票TOP画面に戻る(ページリロード)
+            autoResetTimer = setTimeout(() => {
+                location.reload();
+            }, 30000);
+        }
+        
+        // 自動リセットタイマーをクリア
+        function clearAutoResetTimer() {
+            if (autoResetTimer) {
+                clearTimeout(autoResetTimer);
+                autoResetTimer = null;
+            }
+        }
+        
+        // 施設コンテンツへボタン(再投票ボタン)のクリック処理
+        function goToFacility() {
+            // ページをリロードして投票TOP画面に戻る
+            location.reload();
+        }
+        
+        // メニューボタン(施設メニューボタン)のクリック処理
+        function goToMenu() {
+            // 何もしない(将来的に他のページへの遷移などに使用予定)
         }
         
         // 統計を表示
-        function showStats() {
+        async function showStats() {
+            try {
+                // サーバーから最新の統計を取得
+                const response = await fetch(API_URL);
+                if (response.ok) {
+                    imageStats = await response.json();
+                }
+            } catch (e) {
+                console.error('❌ 統計の取得に失敗しました:', e);
+            }
+
             console.clear();
             console.log('='.repeat(70));
-            console.log('📊 観光地画像選択統計');
+            console.log('📊 観光地画像選択統計(全ブラウザ・全デバイス共有)');
             console.log('='.repeat(70));
             
             for (let i = 0; i < 3; i++) {
@@ -253,36 +403,27 @@
             }
             
             console.log('\n' + '='.repeat(70));
-            console.log('💡 統計をリセットするには: resetImageStats()');
+            console.log('💡 統計をリセットするには、Googleスプレッドシートのデータを削除してください');
             console.log('='.repeat(70));
             
             alert('統計をコンソールに表示しました。\nF12キーを押してコンソールを確認してください。');
         }
         
-        // 統計をリセット
-        function resetImageStats() {
-            if (confirm('すべての統計をリセットしますか？')) {
-                imageStats = {
-                    pair0: { left: 0, right: 0, leftImage: 'term_photo1.jpg', rightImage: 'term_photo2.jpg' },
-                    pair1: { left: 0, right: 0, leftImage: 'term_photo3.jpg', rightImage: 'term_photo4.jpg' },
-                    pair2: { left: 0, right: 0, leftImage: 'term_photo5.jpg', rightImage: 'term_photo6.jpg' }
-                };
-                saveStats();
-                console.log('✅ 統計をリセットしました');
-                showStats();
-            }
-        }
-        
         // グローバルに関数を公開
-        window.resetImageStats = resetImageStats;
         window.showStats = showStats;
         
         // ページ読み込み時に実行
         window.onload = function() {
+            // 統計の読み込みはバックグラウンドで非同期実行
+            loadStats();
+            
+            // 画像はすぐに表示
             displayRandomImages();
+            
             console.log('📝 観光地選択サイトが読み込まれました');
             console.log('💡 統計を見るには「統計表示」ボタンをクリックしてください');
             console.log('💡 またはコンソールで showStats() を実行してください');
+            console.log('🌐 統計は全ブラウザ・全デバイスで共有されます');
         };
     </script>
 </body>

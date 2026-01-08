@@ -185,14 +185,18 @@
         const imagePairs = [
             ['images/GP1_photo1.jpg', 'images/GP1_photo2.jpg'],
             ['images/GP1_photo3.jpg', 'images/GP1_photo4.jpg'],
-            ['images/GP1_photo5.jpg', 'images/GP1_photo6.jpg']
+            ['images/GP1_photo5.jpg', 'images/GP1_photo6.jpg'],
+            ['images/GP1_photo7.jpg', 'images/GP1_photo8.jpg'],
+            ['images/GP1_photo9.jpg', 'images/GP1_photo10.jpg']
         ];
         
         // 各ペアに対応する新しい画像(結果表示用)
         const newImages = {
             0: 'images/new12.jpg',
             1: 'images/new34.jpg',
-            2: 'images/new65.jpg'
+            2: 'images/new56.jpg',
+            3: 'images/new78.jpg',
+            4: 'images/new910.jpg',
         };
         
         let currentPairIndex = 0;
@@ -203,7 +207,9 @@
         let imageStats = {
             pair0: { left: 0, right: 0, leftImage: 'GP1_photo1.jpg', rightImage: 'GP1_photo2.jpg' },
             pair1: { left: 0, right: 0, leftImage: 'GP1_photo3.jpg', rightImage: 'GP1_photo4.jpg' },
-            pair2: { left: 0, right: 0, leftImage: 'GP1_photo5.jpg', rightImage: 'GP1_photo6.jpg' }
+            pair2: { left: 0, right: 0, leftImage: 'GP1_photo5.jpg', rightImage: 'GP1_photo6.jpg' },
+            pair3: { left: 0, right: 0, leftImage: 'GP1_photo7.jpg', rightImage: 'GP1_photo8.jpg' },
+            pair4: { left: 0, right: 0, leftImage: 'GP1_photo9.jpg', rightImage: 'GP1_photo10.jpg' }
         };
         
         // 統計をサーバーから読み込む(バックグラウンドで実行)
@@ -255,7 +261,7 @@
             // タイトルの更新
             const titleElement = document.querySelector('.title');
             if (currentPairIndex === 0) {
-                titleElement.innerHTML = 'あなたなら<br>どっちのビールが飲みたい?';
+                titleElement.innerHTML = 'あなたなら<br>どっちの動物を飼いたい?';
             } else {
                 titleElement.innerHTML = 'あなたなら<br>どっちの観光地に行きたい?';
             }

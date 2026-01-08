@@ -260,11 +260,7 @@
             
             // タイトルの更新
             const titleElement = document.querySelector('.title');
-            if (currentPairIndex === 0) {
-                titleElement.innerHTML = 'あなたなら<br>どっちの動物を飼いたい?';
-            } else {
-                titleElement.innerHTML = 'あなたなら<br>どっちの観光地に行きたい?';
-            }
+            titleElement.innerHTML = 'あなたなら<br>どっちの動物を飼いたい?';
             
             const img1 = document.getElementById('image1');
             const img2 = document.getElementById('image2');
@@ -392,7 +388,7 @@
             console.log('📊 観光地画像選択統計(全ブラウザ・全デバイス共有)');
             console.log('='.repeat(70));
             
-            for (let i = 0; i < 3; i++) {
+            for (let i = 0; i < 5; i++) {
                 const pairKey = `pair${i}`;
                 const stats = imageStats[pairKey];
                 const total = stats.left + stats.right;

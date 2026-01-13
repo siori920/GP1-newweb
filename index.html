@@ -3,75 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>名護市クイズサイネージ</title>
+    <title>観光地選択</title>
     <style>
+        /* ページ全体の設定 */
         body {
             margin: 0;
-            padding: 0;
             width: 782px;
             height: 945px;
-            position: relative;
-            overflow: hidden;
-            font-family: 'Hiragino Sans', 'ヒラギノ角ゴシック', 'Yu Gothic', 'Meiryo', sans-serif;
-        }
-        .background {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
             background: #7accbf;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            position: relative;
         }
-        /* Question text */
-        .question {
-            position: absolute;
-            top: 75px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 470px;
-            text-align: center;
-            font-size: 32px;
-            font-weight: bold;
+        
+        /* タイトル */
+        .title {
+            margin-top: 50px;
+            font-size: 28px;
             color: #fcf2e5;
-            line-height: 1.4;
+            text-align: center;
+            font-weight: bold;
+            line-height: 1.3;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
-        /* Choice buttons */
-        .choices {
-            position: absolute;
-            top: 200px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 520px;
-        }
-        .choice {
-            display: block;
+        
+        /* 画像ペア表示用コンテナ */
+        .image-container {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
             width: 100%;
-            margin: 15px 0;
-            padding: 20px 35px;
-            background: #fcf2e5;
-            border: none;
-            border-radius: 30px;
-            font-size: 28px;
-            font-weight: bold;
-            color: #000;
-            text-align: left;
-            cursor: pointer;
-            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
-            transition: transform 0.2s;
+            margin-top: 60px
         }
-        .choice:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+        
+        /* 新しい画像用コンテナ:最初は完全に非表示 */
+        .new-image-container {
+            display: none;
+            width: 100%;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px
         }
-        .choice:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-        /* 施設コンテンツへボタン（クイズ画面でのみ表示） */
+        
+        /* 施設コンテンツへボタン */
         .facility-button {
             position: absolute;
-            bottom: 80px;
+            bottom: 320px;
             left: 50%;
             transform: translateX(-50%);
             width: 450px;
@@ -95,485 +74,359 @@
             box-shadow: 0 4px 8px rgba(0,0,0,0.4);
         }
         
-        /* Explanation button - 再チャレンジボタンの上に配置 */
-        .explanation-button {
-            position: absolute;
-            bottom: 260px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 450px;
-            height: 80px;
-            background: #fcf2e5;
-            border: none;
-            border-radius: 20px;
-            font-size: 28px;
-            font-weight: bold;
-            color: #333;
-            cursor: pointer;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.3);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            transition: transform 0.2s;
-        }
-        .explanation-button:hover {
-            transform: translateX(-50%) translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
-        }
-        
-        /* Menu button - 元の位置 */
+        /* メニューボタン */
         .menu-button {
             position: absolute;
-            bottom: 170px;
+            bottom: 210px;
             left: 50%;
             transform: translateX(-50%);
             width: 450px;
             height: 80px;
-            background: #fcf2e5;
-            border: none;
+            background-color: white;
             border-radius: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.3);
             font-size: 28px;
             font-weight: bold;
             color: #333;
-            cursor: pointer;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.3);
-            display: flex;
-            align-items: center;
-            justify-content: center;
             transition: transform 0.2s;
-        }
-        .menu-button:hover {
-            transform: translateX(-50%) translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+            border: none;
         }
         
-        /* Result screen styles - カードをさらに上に移動 */
-        .result-screen {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            padding-bottom: 400px;
+        .menu-button:hover {
+            transform: translateX(-50%) scale(1.02);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.4);
         }
-        .result-card {
-            width: 500px;
-            height: 350px;
-            border-radius: 25px;
+        
+        /* 画像のスタイル */
+        .image-container img {
+            width: 280px;
+            height: 210px;
+            cursor: pointer;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease;
+            object-fit: cover;
+        }
+        
+        .image-container img:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.4);
+        }
+        
+        .new-image-container img {
+            width: 420px;
+            height: 315px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            object-fit: cover;
+        }
+        
+        /* プレースホルダー画像のスタイル */
+        .placeholder {
+            background: linear-gradient(135deg, #f0f0f0, #e0e0e0);
             display: flex;
-            flex-direction: column;
-            justify-content: center;
             align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 16px;
+            font-weight: bold;
             text-align: center;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
-            position: relative;
         }
-        .correct-card {
-            background: #fcf2e5;
-        }
-        .incorrect-card {
-            background: #fcf2e5;
-        }
-        .result-header {
-            font-size: 28px;
-            font-weight: bold;
-            margin-bottom: 20px;
-            color: #000;
-        }
-        .result-main {
-            font-size: 56px;
-            font-weight: bold;
-            margin-bottom: 25px;
-            color: #000;
-        }
-        .result-footer {
-            font-size: 22px;
-            line-height: 1.4;
-            color: #000;
-        }
-        /* Quiz screen */
-        .quiz-screen {
-            display: block;
-        }
-        /* Hidden class */
-        .hidden {
-            display: none !important;
-        }
-        /* Explanation screen */
-        .explanation-screen {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: none;
-            justify-content: center;
+        
+        .new-placeholder {
+            background: linear-gradient(135deg, #f0f0f0, #e0e0e0);
+            display: flex;
             align-items: center;
-            padding-bottom: 50px;
-        }
-        .explanation-card {
-            width: 600px;
-            padding: 40px;
-            border-radius: 25px;
-            background: #fcf2e5;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
-            text-align: left;
-        }
-        .explanation-text {
-            font-size: 28px;
-            line-height: 1.6;
-            color: #000;
-        }
-        .explanation-text strong {
+            justify-content: center;
+            color: #666;
+            font-size: 20px;
             font-weight: bold;
+            text-align: center;
         }
     </style>
 </head>
 <body>
-    <div class="background"></div>
-    <!-- Quiz Screen -->
-    <div class="quiz-screen" id="quizScreen">
-        <!-- Quiz content -->
-        <div class="question" id="question"></div>
-        
-        <div class="choices">
-            <button class="choice" id="choiceA" onclick="selectAnswer('A')"></button>
-            <button class="choice" id="choiceB" onclick="selectAnswer('B')"></button>
-            <button class="choice" id="choiceC" onclick="selectAnswer('C')"></button>
-            <button class="choice" id="choiceD" onclick="selectAnswer('D')"></button>
-        </div>
+    <!-- タイトル -->
+    <div class="title">
+        あなたなら<br>
+        どっちの観光地に行きたい?
     </div>
-    <!-- Result Screen -->
-    <div class="result-screen" id="resultScreen">
-        <div class="result-card" id="resultCard">
-            <div class="result-header" id="resultHeader"></div>
-            <div class="result-main" id="resultMain"></div>
-            <div class="result-footer" id="resultFooter"></div>
-        </div>
-    </div>
-    <!-- Explanation Screen -->
-    <div class="explanation-screen" id="explanationScreen">
-        <div class="explanation-card">
-            <div class="explanation-text" id="explanationText"></div>
-        </div>
-    </div>
-    <!-- 施設コンテンツへボタン（クイズ画面でのみ表示） -->
-    <button class="facility-button" id="facilityButton" onclick="goToFacility()">施設コンテンツへ</button>
     
-    <!-- 施設コンテンツへボタン（解説画面用） -->
-    <button class="facility-button" id="facilityButtonExplanation" onclick="goToFacility()" style="display: none;">施設コンテンツへ</button>
+    <!-- 元のペア画像 -->
+    <div class="image-container">
+        <img id="image1" src="" alt="観光地1" onclick="changeImage('left')" class="placeholder">
+        <img id="image2" src="" alt="観光地2" onclick="changeImage('right')" class="placeholder">
+    </div>
     
-    <!-- Explanation button -->
-    <button class="explanation-button" id="explanationButton" onclick="showExplanation()">解説</button>
-    <!-- Menu button -->
-    <button class="menu-button" onclick="returnToQuiz()">再チャレンジ</button>
+    <!-- クリック後に表示する新しい画像 -->
+    <div class="new-image-container">
+        <img id="newImage" src="" alt="選択された観光地" class="new-placeholder">
+    </div>
+    
+    <!-- 施設コンテンツへボタン -->
+    <button class="facility-button" onclick="goToFacility()">
+        再投票
+    </button>
+    
+    <!-- メニューボタン -->
+    <button class="menu-button" onclick="goToMenu()">
+        施設メニュー
+    </button>
     
     <script>
-        // Quiz data with correct answers and IDs
-        const quizData = [
-            {
-                id: 'quiz1',
-                question: "ネオパークオキナワの敷地面積について、次のうち正しいのはどれでしょう？",
-                choices: ["A. 東京ドーム約1個分", "B. 東京ドーム約5個分", "C. 東京ドーム約8個分", "D. 東京ドーム約10個分"],
-                correct: "B",
-                explanation: "東京ドーム約5個分の広大な敷地内で、<strong>世界中の熱帯地方</strong>の環境を再現しています。"
-            },
-            {
-                id: 'quiz2',
-                question: "ネオパークオキナワ内を走っている乗り物はなんでしょう？",
-                choices: ["A. 機関車", "B. ゴーカート", "C. 船", "D. 自転車"],
-                correct: "A",
-                explanation: "ネオパークオキナワでは戦前に沖縄中南部で走っていた<strong>沖縄軽便鉄道</strong>を模した機関車が走っています。"
-            },
-            {
-                id: 'quiz3',
-                question: "名護市の公認キャラクターの名前は？",
-                choices: ["A. 名護家族", "B. 名護師範", "C. 名護師匠", "D. 名護親方"],
-                correct: "D",
-                explanation: "読みは「なぐうぇーかた」「六諭衍義」をもとに、人々に道徳と教育を広め、希望を与えた<strong>名護親方(程順則)</strong>をモチーフとしたゆるキャラ"
-            },
-            {
-                id: 'quiz4',
-                question: "名護市民会館の入り口にある像は何の動物の像？",
-                choices: ["A. 猫の像", "B. ヤンバルクイナの像", "C. 黒豚(あぐー豚)の像", "D. ジンベイザメの像"],
-                correct: "C",
-                explanation: "2013年9月1日に<strong>｢アグーの里｣</strong>を宣言し、記念像を建立しました。<strong>「アグー」</strong>とは沖縄固有の貴重な在来豚で、やわらかく、甘みが強い味わいが特徴です。かつて絶滅の危機を迎えた「アグー」を戻し交配により復活させました。"
-            }
-        ];
-        let currentQuiz = null;
-        let answerStats = null;
-        let explanationTimer = null;
-        let inactivityTimer = null;
-        
         // Google Apps Script Web App URL (デプロイ後のURLに置き換えてください)
-        const API_URL = 'https://script.google.com/macros/s/AKfycbyPmsfp6ts6l10FfIUurJaVkskcrWP89B04c8r1JHwFgm8lvjAqlQ5koQgZNXUuJ2OXDA/exec';
+        const API_URL = 'https://script.google.com/macros/s/AKfycbxNl12ClxKEJSLTwBqcT_4jeWrCerMNl9Xtg7-1GyCHj3jVHGbodB0gJAHF9MjqjAzE/exec';
+
+        // 画像のペアを配列に格納(元の2つの画像のみ)
+        const imagePairs = [
+            ['images/GP1_photo1.jpg', 'images/GP1_photo2.jpg'],
+            ['images/GP1_photo3.jpg', 'images/GP1_photo4.jpg'],
+            ['images/GP1_photo5.jpg', 'images/GP1_photo6.jpg'],
+            ['images/GP1_photo7.jpg', 'images/GP1_photo8.jpg'],
+            ['images/GP1_photo9.jpg', 'images/GP1_photo10.jpg']
+        ];
         
-        // 30秒無操作タイマーのリセット
-        function resetInactivityTimer() {
-            // 既存のタイマーをクリア
-            if (inactivityTimer) {
-                clearTimeout(inactivityTimer);
-            }
-            
-            // 新しいタイマーを設定（30秒）
-            inactivityTimer = setTimeout(() => {
-                console.log('⏰ 30秒間操作がなかったため、トップページに戻ります');
-                returnToQuiz();
-            }, 30000);
-        }
+        // 各ペアに対応する新しい画像(結果表示用)
+        const newImages = {
+            0: 'images/new12.jpg',
+            1: 'images/new34.jpg',
+            2: 'images/new56.jpg',
+            3: 'images/new78.jpg',
+            4: 'images/new910.jpg',
+        };
         
-        // Create empty statistics object
-        function createEmptyStats() {
-            return {
-                quiz1: { A: 0, B: 0, C: 0, D: 0 },
-                quiz2: { A: 0, B: 0, C: 0, D: 0 },
-                quiz3: { A: 0, B: 0, C: 0, D: 0 },
-                quiz4: { A: 0, B: 0, C: 0, D: 0 }
-            };
-        }
+        let currentPairIndex = 0;
+        let clickedSide = ''; // クリックされた画像の側('left' or 'right')
+        let autoResetTimer = null; // 自動リセット用タイマー
         
-        // Initialize statistics from server (バックグラウンドで実行)
-        async function initStats() {
+        // 統計データの初期化
+        let imageStats = {
+            pair0: { left: 0, right: 0, leftImage: 'GP1_photo1.jpg', rightImage: 'GP1_photo2.jpg' },
+            pair1: { left: 0, right: 0, leftImage: 'GP1_photo3.jpg', rightImage: 'GP1_photo4.jpg' },
+            pair2: { left: 0, right: 0, leftImage: 'GP1_photo5.jpg', rightImage: 'GP1_photo6.jpg' },
+            pair3: { left: 0, right: 0, leftImage: 'GP1_photo7.jpg', rightImage: 'GP1_photo8.jpg' },
+            pair4: { left: 0, right: 0, leftImage: 'GP1_photo9.jpg', rightImage: 'GP1_photo10.jpg' }
+        };
+        
+        // 統計をサーバーから読み込む(バックグラウンドで実行)
+        async function loadStats() {
             try {
                 const response = await fetch(API_URL);
                 if (response.ok) {
-                    answerStats = await response.json();
+                    imageStats = await response.json();
                     console.log('✅ サーバーから統計を読み込みました');
                 } else {
-                    answerStats = createEmptyStats();
-                    console.log('✅ 新しい統計を作成しました');
+                    console.log('⚠️ サーバーから統計を取得できませんでした。初期値を使用します。');
                 }
             } catch (e) {
                 console.log('⚠️ サーバー接続エラー。ローカルモードで動作します:', e);
-                answerStats = createEmptyStats();
             }
         }
         
-        // Save answer to server (URLパラメータを使用してCORS回避)
-        async function saveAnswer(quizId, choice) {
+        // 統計を保存(サーバーに送信) - 画像ファイル名を送信
+        async function saveVote(pairIndex, side) {
+            // 画像ファイル名を取得
+            const pairKey = `pair${pairIndex}`;
+            const imageName = side === 'left' 
+                ? imageStats[pairKey].leftImage 
+                : imageStats[pairKey].rightImage;
+            
             try {
-                const url = `${API_URL}?quizId=${encodeURIComponent(quizId)}&choice=${encodeURIComponent(choice)}`;
-                const response = await fetch(url, {
+                const url = `${API_URL}?pairIndex=${encodeURIComponent(pairIndex)}&imageName=${encodeURIComponent(imageName)}`;
+                await fetch(url, {
                     method: 'POST',
                     mode: 'no-cors'
                 });
                 
-                console.log('✅ 回答をサーバーに送信しました');
+                console.log('💾 投票をサーバーに送信しました:', imageName);
             } catch (e) {
                 console.error('❌ サーバー接続エラー:', e);
             }
         }
         
-        // Record answer
-        async function recordAnswer(quizId, selectedChoice) {
-            // Update local stats immediately for UI
-            if (answerStats[quizId] && answerStats[quizId][selectedChoice] !== undefined) {
-                answerStats[quizId][selectedChoice]++;
-            }
-            
-            // Save to server
-            await saveAnswer(quizId, selectedChoice);
-            console.log(`📝 回答を記録: ${quizId} - ${selectedChoice}`);
+        // ランダムなインデックスを生成
+        function getRandomIndex(max) {
+            return Math.floor(Math.random() * max);
         }
         
-        // Random quiz selection
-        function loadRandomQuiz() {
-            const randomIndex = Math.floor(Math.random() * quizData.length);
-            currentQuiz = quizData[randomIndex];
+        // ページ読み込み時にランダムペアを表示
+        function displayRandomImages() {
+            currentPairIndex = getRandomIndex(imagePairs.length);
+            const [src1, src2] = imagePairs[currentPairIndex];
             
-            document.getElementById('question').innerText = currentQuiz.question;
-            document.getElementById('choiceA').innerText = currentQuiz.choices[0];
-            document.getElementById('choiceB').innerText = currentQuiz.choices[1];
-            document.getElementById('choiceC').innerText = currentQuiz.choices[2];
-            document.getElementById('choiceD').innerText = currentQuiz.choices[3];
+            // タイトルの更新
+            const titleElement = document.querySelector('.title');
+            titleElement.innerHTML = 'あなたなら<br>どっちの動物を飼いたい?';
             
-            // Enable all buttons
-            document.querySelectorAll('.choice').forEach(btn => btn.disabled = false);
+            const img1 = document.getElementById('image1');
+            const img2 = document.getElementById('image2');
             
-            // タイマーをリセット
-            resetInactivityTimer();
+            // 画像読み込み処理
+            img1.onload = function() {
+                this.classList.remove('placeholder');
+                this.style.background = 'none';
+            };
+            img1.onerror = function() {
+                this.classList.add('placeholder');
+                this.innerHTML = '観光地画像1';
+                this.removeAttribute('src');
+            };
+            
+            img2.onload = function() {
+                this.classList.remove('placeholder');
+                this.style.background = 'none';
+            };
+            img2.onerror = function() {
+                this.classList.add('placeholder');
+                this.innerHTML = '観光地画像2';
+                this.removeAttribute('src');
+            };
+            
+            // プレースホルダーテキストを設定
+            img1.innerHTML = '観光地画像1';
+            img2.innerHTML = '観光地画像2';
+            
+            img1.src = src1;
+            img2.src = src2;
         }
         
-        // Handle answer selection
-        async function selectAnswer(selectedChoice) {
-            // タイマーをリセット
-            resetInactivityTimer();
+        // クリック時:どちらをクリックしたか記録 → 新画像を表示
+        async function changeImage(side) {
+            clickedSide = side;
             
-            // Disable all buttons to prevent multiple clicks
-            document.querySelectorAll('.choice').forEach(btn => btn.disabled = true);
-            
-            // Record the answer
-            await recordAnswer(currentQuiz.id, selectedChoice);
-            
-            const isCorrect = selectedChoice === currentQuiz.correct;
-            showResult(isCorrect);
-        }
-        
-        // Show result screen
-        function showResult(isCorrect) {
-            const quizScreen = document.getElementById('quizScreen');
-            const resultScreen = document.getElementById('resultScreen');
-            const resultCard = document.getElementById('resultCard');
-            const resultHeader = document.getElementById('resultHeader');
-            const resultMain = document.getElementById('resultMain');
-            const resultFooter = document.getElementById('resultFooter');
-            const explanationButton = document.getElementById('explanationButton');
-            const facilityButton = document.getElementById('facilityButton');
-            
-            // Hide quiz screen and show result screen
-            quizScreen.classList.add('hidden');
-            resultScreen.style.display = 'flex';
-            explanationButton.style.display = 'flex';
-            facilityButton.style.display = 'none';
-            
-            if (isCorrect) {
-                // Correct answer
-                resultCard.className = 'result-card correct-card';
-                resultHeader.textContent = 'お見事！';
-                resultMain.textContent = '正解！';
-                resultFooter.textContent = 'もっと名護を知りたい方は\nこちら';
+            // ローカルの統計を更新
+            const pairKey = `pair${currentPairIndex}`;
+            if (side === 'left') {
+                imageStats[pairKey].left++;
             } else {
-                // Incorrect answer
-                resultCard.className = 'result-card incorrect-card';
-                resultHeader.textContent = '残念...';
-                resultMain.textContent = '不正解！';
-                resultFooter.textContent = '正解を知りたい方はこちら';
+                imageStats[pairKey].right++;
             }
             
-            // タイマーをリセット
-            resetInactivityTimer();
+            // サーバーに投票を送信
+            await saveVote(currentPairIndex, side);
+            
+            console.log('✅ 投票を記録しました');
+            console.log('クリックされた画像:', clickedSide);
+            console.log('選択されたペア:', currentPairIndex);
+            console.log('現在の統計:', imageStats[pairKey]);
+            
+            // 元の画像ペアを非表示にし、新しい画像を表示
+            document.querySelector('.image-container').style.display = 'none';
+            const newContainer = document.querySelector('.new-image-container');
+            newContainer.style.display = 'flex';
+            
+            const newImg = document.getElementById('newImage');
+            newImg.onload = function() {
+                this.classList.remove('new-placeholder');
+                this.style.background = 'none';
+                this.innerHTML = '';
+            };
+            newImg.onerror = function() {
+                this.classList.add('new-placeholder');
+                this.innerHTML = '選択された<br>観光地画像';
+                this.removeAttribute('src');
+            };
+            
+            // プレースホルダーテキストを設定
+            newImg.innerHTML = '選択された<br>観光地画像';
+            newImg.src = newImages[currentPairIndex];
+            
+            // 30秒後に自動的に投票TOP画面に戻る
+            startAutoResetTimer();
         }
         
-        // 施設コンテンツへボタンのクリック処理
+        // 自動リセットタイマーを開始
+        function startAutoResetTimer() {
+            // 既存のタイマーがあればクリア
+            if (autoResetTimer) {
+                clearTimeout(autoResetTimer);
+            }
+            
+            // 30秒後に投票TOP画面に戻る(ページリロード)
+            autoResetTimer = setTimeout(() => {
+                location.reload();
+            }, 30000);
+        }
+        
+        // 自動リセットタイマーをクリア
+        function clearAutoResetTimer() {
+            if (autoResetTimer) {
+                clearTimeout(autoResetTimer);
+                autoResetTimer = null;
+            }
+        }
+        
+        // 施設コンテンツへボタン(再投票ボタン)のクリック処理
         function goToFacility() {
-            // タイマーをリセット
-            resetInactivityTimer();
-            
-            // 必要に応じて遷移先のURLを設定
-            // window.location.href = 'facility.html'; // 実際のページに遷移する場合
+            // ページをリロードして投票TOP画面に戻る
+            location.reload();
         }
         
-        // Return to quiz screen
-        function returnToQuiz() {
-            // 解説タイマーをクリア
-            if (explanationTimer) {
-                clearTimeout(explanationTimer);
-                explanationTimer = null;
-            }
-            
-            const quizScreen = document.getElementById('quizScreen');
-            const resultScreen = document.getElementById('resultScreen');
-            const explanationScreen = document.getElementById('explanationScreen');
-            const explanationButton = document.getElementById('explanationButton');
-            const facilityButton = document.getElementById('facilityButton');
-            const facilityButtonExplanation = document.getElementById('facilityButtonExplanation');
-            
-            // Hide result screen and explanation screen, show quiz screen
-            resultScreen.style.display = 'none';
-            explanationScreen.style.display = 'none';
-            explanationButton.style.display = 'none';
-            facilityButton.style.display = 'flex';
-            facilityButtonExplanation.style.display = 'none';
-            quizScreen.classList.remove('hidden');
-            
-            // Load a new random quiz
-            loadRandomQuiz();
+        // メニューボタン(施設メニューボタン)のクリック処理
+        function goToMenu() {
+            // 何もしない(将来的に他のページへの遷移などに使用予定)
         }
         
-        // Show explanation screen
-        function showExplanation() {
-            // タイマーをリセット
-            resetInactivityTimer();
-            
-            const resultScreen = document.getElementById('resultScreen');
-            const explanationScreen = document.getElementById('explanationScreen');
-            const explanationText = document.getElementById('explanationText');
-            const explanationButton = document.getElementById('explanationButton');
-            const facilityButtonExplanation = document.getElementById('facilityButtonExplanation');
-            
-            // Set explanation text with HTML for bold formatting
-            explanationText.innerHTML = currentQuiz.explanation;
-            
-            // Hide result screen, explanation button and show explanation screen
-            resultScreen.style.display = 'none';
-            explanationButton.style.display = 'none';
-            explanationScreen.style.display = 'flex';
-            facilityButtonExplanation.style.display = 'flex';
-            
-            // 既存の解説タイマーがあればクリア
-            if (explanationTimer) {
-                clearTimeout(explanationTimer);
-            }
-            
-            // 20秒後に自動的にクイズ画面に戻る
-            explanationTimer = setTimeout(() => {
-                returnToQuiz();
-            }, 20000);
-        }
-        
-        // Show statistics
+        // 統計を表示
         async function showStats() {
             try {
-                // Reload latest stats from server
+                // サーバーから最新の統計を取得
                 const response = await fetch(API_URL);
                 if (response.ok) {
-                    answerStats = await response.json();
+                    imageStats = await response.json();
                 }
-                
-                console.clear();
-                console.log('='.repeat(60));
-                console.log('📊 クイズ回答統計（全ブラウザ・全デバイス共有）');
-                console.log('='.repeat(60));
-                
-                quizData.forEach((quiz, index) => {
-                    const stats = answerStats[quiz.id];
-                    const total = stats.A + stats.B + stats.C + stats.D;
-                    
-                    console.log(`\n【問題${index + 1}】${quiz.question}`);
-                    console.log(`正解: ${quiz.correct}`);
-                    console.log('-'.repeat(50));
-                    console.log(`A: ${stats.A}人 (${total > 0 ? Math.round(stats.A / total * 100) : 0}%)`);
-                    console.log(`B: ${stats.B}人 (${total > 0 ? Math.round(stats.B / total * 100) : 0}%)`);
-                    console.log(`C: ${stats.C}人 (${total > 0 ? Math.round(stats.C / total * 100) : 0}%)`);
-                    console.log(`D: ${stats.D}人 (${total > 0 ? Math.round(stats.D / total * 100) : 0}%)`);
-                    console.log(`合計: ${total}人`);
-                });
-                
-                console.log('\n' + '='.repeat(60));
-                console.log('💡 統計をリセットするには、Googleスプレッドシートのデータを削除してください');
-                console.log('='.repeat(60));
             } catch (e) {
                 console.error('❌ 統計の取得に失敗しました:', e);
             }
+
+            console.clear();
+            console.log('='.repeat(70));
+            console.log('📊 観光地画像選択統計(全ブラウザ・全デバイス共有)');
+            console.log('='.repeat(70));
+            
+            for (let i = 0; i < 5; i++) {
+                const pairKey = `pair${i}`;
+                const stats = imageStats[pairKey];
+                const total = stats.left + stats.right;
+                const leftPercent = total > 0 ? Math.round(stats.left / total * 100) : 0;
+                const rightPercent = total > 0 ? Math.round(stats.right / total * 100) : 0;
+                
+                console.log(`\n【ペア${i + 1}】`);
+                console.log('-'.repeat(60));
+                console.log(`左の画像: ${stats.leftImage}`);
+                console.log(`  → ${stats.left}人が選択 (${leftPercent}%)`);
+                console.log(`右の画像: ${stats.rightImage}`);
+                console.log(`  → ${stats.right}人が選択 (${rightPercent}%)`);
+                console.log(`合計: ${total}人`);
+            }
+            
+            console.log('\n' + '='.repeat(70));
+            console.log('💡 統計をリセットするには、Googleスプレッドシートのデータを削除してください');
+            console.log('='.repeat(70));
+            
+            alert('統計をコンソールに表示しました。\nF12キーを押してコンソールを確認してください。');
         }
         
-        // Make functions available globally for console access
+        // グローバルに関数を公開
         window.showStats = showStats;
         
-        // Load quiz on page load
-        window.addEventListener('load', () => {
-            // 統計の初期化をバックグラウンドで実行（待たない）
-            answerStats = createEmptyStats();
-            initStats();
+        // ページ読み込み時に実行
+        window.onload = function() {
+            // 統計の読み込みはバックグラウンドで非同期実行
+            loadStats();
             
-            // クイズをすぐに表示
-            loadRandomQuiz();
+            // 画像はすぐに表示
+            displayRandomImages();
             
-            // 初期表示では施設ボタンを表示
-            document.getElementById('facilityButton').style.display = 'flex';
-            
-            console.log('📝 クイズサイトが読み込まれました');
-            console.log('💡 統計を見るには、コンソールで showStats() を実行してください');
+            console.log('📝 観光地選択サイトが読み込まれました');
+            console.log('💡 統計を見るには「統計表示」ボタンをクリックしてください');
+            console.log('💡 またはコンソールで showStats() を実行してください');
             console.log('🌐 統計は全ブラウザ・全デバイスで共有されます');
-            console.log('⏰ 30秒間操作がない場合、自動的にトップページに戻ります');
-        });
-        
-        // すべてのユーザー操作でタイマーをリセット
-        document.addEventListener('click', resetInactivityTimer);
-        document.addEventListener('touchstart', resetInactivityTimer);
+        };
     </script>
 </body>
 </html>
